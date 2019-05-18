@@ -43,10 +43,16 @@ for csvfile_name in csvfile_names:
     urls = [url[0] for url in urls_np]
 
     for i, url in enumerate(urls):
-        print(url)
+        print("开始抓取第{}/{}条url => {}".format(i, len(urls), url))
         txtfile.write(str(url) + '\n')
         txtfile.flush()
-        data = urllib.request.urlopen(url).read().decode('utf-8')
+        try:
+            data = urllib.request.urlopen(url).read().decode('utf-8')
+        except:
+            print('第{}条url:{}抓取失败, 自动跳过'.format(i, url))
+            data = ''
+            continue
+        print('第{}条url:{}抓取成功,开始解析内容'.format(i, url))
         soup = BeautifulSoup(data, 'html.parser')
         results = soup.find_all('div', id='resultStats')
         for result in results:
