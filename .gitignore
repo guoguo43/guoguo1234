@@ -1,0 +1,4 @@
+#   忽略以下文件
+.idea
+.vscode
+*.pyc
