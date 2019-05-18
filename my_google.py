@@ -15,6 +15,7 @@ headers = {
          "Referer": "https://www.google.com.hk/"}
 
 
+
 cjar = http.cookiejar.CookieJar()
 opener = urllib.request.build_opener(urllib.request.HTTPCookieProcessor(cjar))
 
@@ -28,6 +29,16 @@ urllib.request.install_opener(opener)
 csvfile_names = os.listdir('.\\URL_GOOGLE_CSV')
 
 txtfile = open('google_results.txt', 'a+', encoding='utf-8')
+logfile = open('runtime_log.txt', 'a+', encoding='utf-8')
+#   简易log函数
+def log(*logContentList):
+    content = '{}:'.format(time.strftime('%Y-%m-%d %H:%M:%S')
+    for logItem in logContentList:
+        content = '{}{}'.format(content, logItem)
+    logfile.write(content + '\n')
+    print(content)
+    return
+
 
 for csvfile_name in csvfile_names:
     stock_name = csvfile_name.split('.')[0]
@@ -43,22 +54,22 @@ for csvfile_name in csvfile_names:
     urls = [url[0] for url in urls_np]
 
     for i, url in enumerate(urls):
-        print("开始抓取第{}/{}条url => {}".format(i, len(urls), url))
+        log("开始抓取第{}/{}条url => {}".format(i, len(urls), url))
         txtfile.write(str(url) + '\n')
         txtfile.flush()
         try:
             data = urllib.request.urlopen(url).read().decode('utf-8')
         except:
-            print('第{}条url:{}抓取失败, 自动跳过'.format(i, url))
+            log('第{}条url:{}抓取失败, 自动跳过'.format(i, url))
             data = ''
             continue
-        print('第{}条url:{}抓取成功,开始解析内容'.format(i, url))
+        log('第{}条url:{}抓取成功,开始解析内容'.format(i, url))
         soup = BeautifulSoup(data, 'html.parser')
         results = soup.find_all('div', id='resultStats')
         for result in results:
             s = result.get_text()  # str
             writer = str(i) + ' ' + s + '\n'
-            print(writer)
+            log(writer)
             txtfile.write(writer)
             txtfile.flush()
         time.sleep(3 + 2*random.random())
