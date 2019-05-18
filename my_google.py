@@ -32,7 +32,7 @@ txtfile = open('google_results.txt', 'a+', encoding='utf-8')
 logfile = open('runtime_log.txt', 'a+', encoding='utf-8')
 #   简易log函数
 def log(*logItemList):
-    content = '{}:'.format(time.strftime('%Y-%m-%d %H:%M:%S'))
+    content = '{} :  '.format(time.strftime('%Y-%m-%d %H:%M:%S'))
     for logItem in logItemList:
         content = '{}{}'.format(content, logItem)
     logfile.write(content + '\n')
